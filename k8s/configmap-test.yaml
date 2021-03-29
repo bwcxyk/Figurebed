@@ -1,0 +1,102 @@
+apiVersion: v1
+data:
+  application-dev.yml: |
+    spring:
+       datasource:
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@192.168.1.181:1521:orcl
+          #url: jdbc:oracle:thin:@192.168.1.67:1521:orcl
+          #username: wcpt
+          #password: wcpt1
+          username: wcpt_user
+          password: wcpt_user
+          type: com.alibaba.druid.pool.DruidDataSource
+          initial-size: 1
+          min-idle: 3
+          max-active: 20
+          max-wait: 60000
+          time-between-eviction-runs-millis: 60000
+          min-evictable-idle-time-millis: 30000
+       rabbitmq:
+         first:
+           port: 5672
+           host: 192.168.1.123
+           username: devmq
+           password: devmq
+           virtual-host: onlinePay_vhost
+         second:
+           port: 5672
+           host: 192.168.1.123
+           username: devmq
+           password: devmq
+           virtual-host: bank_vhost
+           publisher-returns: true
+           publisher-confirms: true
+           listener:
+             simple:
+               acknowledge-mode: manual
+               concurrency: 1
+               max-concurrency: 1
+       sms:
+          account: CN6033472
+          pswd: QWsp8RDHSE489f
+          url: http://smssh1.253.com/msg/send/json
+       data:
+          mongodb:
+            database: tms
+            host: 192.168.1.123
+            port: 27017
+            username: testmongo
+            password: testmongo
+
+
+    logging:
+      level:
+         root: INFO
+         # 打印sql
+         #com.yuanfu.wcpt.server.mapper: debug
+         com.yuanfu.wcpt.server.*: DEBUG
+
+    zookeeper:
+       address: 192.168.1.123:2181
+
+    dubbo:
+       port: 20880
+
+    jedis :
+        pool :
+            host : 192.168.1.123
+            port : 6379
+            pass : redis
+            timeout : 6000
+            database : 0
+            config :
+              maxTotal: 100
+              maxIdle: 10
+              maxWaitMillis : 100000
+    lock:
+      acquireTimeout: 30000
+      timeout: 4000
+
+    zeyi:
+      secret: 5b926fbb2a1a11eba474ec0d9a37059e
+      postUrl: http://47.98.245.217:8098
+      payFinalMethod: /yf/payFinal
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2021-03-09T01:21:04Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:data:
+        .: {}
+        f:application-dev.yml: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2021-03-09T01:21:04Z"
+  name: test-config
+  namespace: default
+  resourceVersion: "72879"
+  selfLink: /api/v1/namespaces/default/configmaps/test-config
+  uid: 5c3f387a-3b44-4193-9f6f-345a11eae2ad
